@@ -3,9 +3,6 @@ package com.datapine.model;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-/**
- * Created by burakdagli on 5.01.2018.
- */
 public class ChartRequestModel {
     @Size(min=1, max=1)
     private List<String> dimensions;

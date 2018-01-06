@@ -2,9 +2,6 @@ package com.datapine.model;
 
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by burakdagli on 5.01.2018.
- */
 public class StatisticRequestModel {
     private Integer last;
 

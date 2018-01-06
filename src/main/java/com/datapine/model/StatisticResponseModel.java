@@ -1,10 +1,5 @@
 package com.datapine.model;
 
-import java.util.List;
-
-/**
- * Created by burakdagli on 5.01.2018.
- */
 public class StatisticResponseModel {
     private Integer totalRequests;
     private Integer totalQueries;

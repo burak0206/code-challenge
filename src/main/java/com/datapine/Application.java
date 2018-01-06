@@ -1,8 +1,5 @@
 package com.datapine;
 
-/**
- * Created by burakdagli on 5.01.2018.
- */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
