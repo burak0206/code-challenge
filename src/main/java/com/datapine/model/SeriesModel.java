@@ -6,6 +6,14 @@ public class SeriesModel {
     private String name;
     private List<Double> data;
 
+    public SeriesModel(String name, List<Double> data) {
+        this.name = name;
+        this.data = data;
+    }
+
+    public SeriesModel() {
+    }
+
     public String getName() {
         return name;
     }

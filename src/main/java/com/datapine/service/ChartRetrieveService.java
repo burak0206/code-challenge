@@ -3,33 +3,29 @@ package com.datapine.service;
 import com.datapine.model.ChartRequestModel;
 import com.datapine.model.ChartResponseModel;
 import com.datapine.model.SeriesModel;
+import com.datapine.repository.ResultSetsDataRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ChartRetrieveService {
-    public ChartResponseModel getChartByRequestModel(ChartRequestModel chartRequestModel) {
-        chartRequestModel.getDimensions().stream().forEach(d -> System.out.println(d));
-        chartRequestModel.getMeasures().stream().forEach(d -> System.out.println(d));
+    @Autowired
+    private ResultSetsDataRepository resultSetsDataRepository;
+    public Optional<ChartResponseModel> getChartByRequestModel(ChartRequestModel chartRequestModel) {
         ChartResponseModel chartResponseModel = new ChartResponseModel();
         chartResponseModel.setCategories(Arrays.asList("Real Madrid","Barcelona","Bayern Munich","Liverpool","Milan"));
-
         List<SeriesModel> seriesModelList = new ArrayList<SeriesModel>();
-
-        SeriesModel seriesModel = new SeriesModel();
-        seriesModel.setName("champions");
-        seriesModel.setData(Arrays.asList(12.0, 5.0, 5.0, 5.0, 7.0));
-
-        SeriesModel seriesModel2 = new SeriesModel();
-        seriesModel2.setName("leagues");
-        seriesModel2.setData(Arrays.asList(33.0, 24.0, 26.0, 28.0, 28.0));
-
-        seriesModelList.add(seriesModel);
-        seriesModelList.add(seriesModel2);
-
+        chartRequestModel.getMeasures().stream().forEach(m ->
+                resultSetsDataRepository.getDataSetsByKey(m).ifPresent( list ->{
+                            List<Double> numbers =list.stream().map(l -> ((double) l.getNumber())).collect(Collectors.toList());
+                            seriesModelList.add(new SeriesModel(m,numbers));
+                        }
+                )
+        );
         chartResponseModel.setSeries(seriesModelList);
-        return chartResponseModel;
+        return Optional.ofNullable(chartResponseModel);
     }
 }

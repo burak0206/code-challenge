@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 public class StatisticController {
@@ -34,11 +35,16 @@ public class StatisticController {
             return status.toString();
         }
 
-        StatisticResponseModel statisticResponseModel = statisticsRetrieveService.getStatisticsByRequestModel(statisticRequestModel);
+        Optional<StatisticResponseModel> statisticResponseModelOptional = statisticsRetrieveService.getStatisticsByRequestModel(statisticRequestModel);
 
-        status.addProperty("totalRequests", statisticResponseModel.getTotalRequests().toString());
-        status.addProperty("totalQueries", statisticResponseModel.getTotalQueries().toString());
-        status.addProperty("chart", statisticResponseModel.getChart().toString());
+        if(statisticResponseModelOptional.isPresent()){
+            StatisticResponseModel statisticResponseModel = statisticResponseModelOptional.get();
+            status.addProperty("totalRequests", statisticResponseModel.getTotalRequests().toString());
+            status.addProperty("totalQueries", statisticResponseModel.getTotalQueries().toString());
+            status.addProperty("chart", statisticResponseModel.getChart().toString());
+
+        }
+
         return status.toString();
     }
 

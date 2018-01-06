@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StatisticsRetrieveService {
-    public StatisticResponseModel getStatisticsByRequestModel(StatisticRequestModel statisticRequestModel) {
+    public Optional<StatisticResponseModel> getStatisticsByRequestModel(StatisticRequestModel statisticRequestModel) {
         StatisticResponseModel statisticResponseModel = new StatisticResponseModel();
         statisticResponseModel.setTotalQueries(4500);
         statisticResponseModel.setTotalRequests(2500);
@@ -42,6 +43,6 @@ public class StatisticsRetrieveService {
         statisticResponseModel.setChart(chartResponseModel);
 
 
-        return statisticResponseModel;
+        return Optional.ofNullable(statisticResponseModel);
     }
 }
