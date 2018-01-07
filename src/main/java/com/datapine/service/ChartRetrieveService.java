@@ -1,5 +1,6 @@
 package com.datapine.service;
 
+import com.datapine.entity.ChartRow;
 import com.datapine.model.ChartRequestModel;
 import com.datapine.model.ChartResponseModel;
 import com.datapine.model.SeriesModel;
@@ -14,9 +15,21 @@ import java.util.stream.Collectors;
 public class ChartRetrieveService {
     @Autowired
     private ResultSetsDataRepository resultSetsDataRepository;
+
+    @Autowired
+    private StatisticsService statisticsService;
+
     public Optional<ChartResponseModel> getChartByRequestModel(ChartRequestModel chartRequestModel) {
+        writeRequestAndQueryIntoStatisticsRepository(chartRequestModel.getMeasures());
+
+
         ChartResponseModel chartResponseModel = new ChartResponseModel();
-        chartResponseModel.setCategories(Arrays.asList("Real Madrid","Barcelona","Bayern Munich","Liverpool","Milan"));
+        String key = chartRequestModel.getMeasures().get(0);
+        if(resultSetsDataRepository.getDataSetsByKey(key).isPresent()){
+            List<ChartRow> chartRows = resultSetsDataRepository.getDataSetsByKey(key).get();
+            List<String> teams = chartRows.stream().map(chartRow -> chartRow.getTeam()).collect(Collectors.toList());
+            chartResponseModel.setCategories(teams);
+        }
         List<SeriesModel> seriesModelList = new ArrayList<SeriesModel>();
         chartRequestModel.getMeasures().stream().forEach(m ->
                 resultSetsDataRepository.getDataSetsByKey(m).ifPresent( list ->{
@@ -27,5 +40,11 @@ public class ChartRetrieveService {
         );
         chartResponseModel.setSeries(seriesModelList);
         return Optional.ofNullable(chartResponseModel);
+    }
+
+    private void writeRequestAndQueryIntoStatisticsRepository(List<String> measures) {
+        statisticsService.addRequest();
+        measures.forEach(m -> statisticsService.addQuery());
+
     }
 }

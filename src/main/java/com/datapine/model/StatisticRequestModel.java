@@ -1,13 +1,18 @@
 package com.datapine.model;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class StatisticRequestModel {
+    @NotNull
+    @Min(value = 1)
     private Integer last;
 
     @NotNull
     private String timeUnit;
 
+    @NotNull
+    @Min(value = 1)
     private Integer mavgPoints;
 
     public Integer getLast() {

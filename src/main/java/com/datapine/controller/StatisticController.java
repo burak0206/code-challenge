@@ -1,6 +1,6 @@
 package com.datapine.controller;
 
-import com.datapine.service.StatisticsRetrieveService;
+import com.datapine.service.StatisticsService;
 import com.datapine.validator.StatisticRequestValidator;
 import com.datapine.model.StatisticRequestModel;
 import com.datapine.model.StatisticResponseModel;
@@ -21,22 +21,20 @@ public class StatisticController {
     private StatisticRequestValidator statisticRequestValidator;
 
     @Autowired
-    private StatisticsRetrieveService statisticsRetrieveService;
+    private StatisticsService statisticsService;
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String statistics(@Valid  StatisticRequestModel statisticRequestModel, BindingResult bindingResult){
         JsonObject status = new JsonObject();
         statisticRequestValidator.validate(statisticRequestModel,bindingResult);
-
         if (bindingResult.hasErrors() ) {
             status.addProperty("error","timeUnit should be minutes or seconds");
             status.addProperty("exception.message",bindingResult.toString());
             return status.toString();
         }
 
-        Optional<StatisticResponseModel> statisticResponseModelOptional = statisticsRetrieveService.getStatisticsByRequestModel(statisticRequestModel);
-
+        Optional<StatisticResponseModel> statisticResponseModelOptional = statisticsService.getStatistics(statisticRequestModel);
         if(statisticResponseModelOptional.isPresent()){
             StatisticResponseModel statisticResponseModel = statisticResponseModelOptional.get();
             status.addProperty("totalRequests", statisticResponseModel.getTotalRequests().toString());
@@ -44,7 +42,6 @@ public class StatisticController {
             status.addProperty("chart", statisticResponseModel.getChart().toString());
 
         }
-
         return status.toString();
     }
 

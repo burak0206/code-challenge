@@ -1,10 +1,10 @@
 package com.datapine.entity;
 
-public class Row {
+public class ChartRow {
     private String team;
     private Integer number;
 
-    public Row(String team, Integer number) {
+    public ChartRow(String team, Integer number) {
         this.team = team;
         this.number = number;
     }
